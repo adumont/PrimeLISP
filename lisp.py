@@ -185,6 +185,7 @@ def main() :
     while True :
         s = getSexp()
         if   s == 'alist' : printAlist(Alist)
+        elif s == 'exit' or s == 'quit'  : quit()
         elif s == 'debug' : debug_flag = not debug_flag
         else :
             if is_prime:
