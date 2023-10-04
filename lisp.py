@@ -180,6 +180,7 @@ def apply(fn,args,alist) :
         elif fn == '>'    : return [[],'t'][args[0] >  args[1]]
         elif fn == '>='   : return [[],'t'][args[0] >= args[1]]
         elif fn == 'not'  : return [[],'t'][args[0] == []]
+        elif fn == 'eval' : return eval(args[0], alist)
         elif fn == 'cons' :
             if type(args[1]) != type([]):
                 args[1] = [args[1]]
