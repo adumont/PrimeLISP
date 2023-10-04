@@ -156,10 +156,12 @@ def evcon (c, alist) :
     elif eval (c[0][0], alist) : return eval (c[0][1],alist)
     else                       : return evcon(c[1:],  alist)
 
-def evlis (l, alist) :
+def evlis(list, alist) :
     "evaluate all elements in a list, returning list of the values"
-    if not l : return []
-    else     : return [eval(l[0], alist)] + evlis(l[1:], alist)
+    if not list:
+        return []
+    else:
+        return [ eval(list[0], alist) ] + evlis( list[1:], alist )
 
 def printAlist(alist) :
     print ("Alist")
