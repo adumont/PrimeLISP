@@ -137,8 +137,30 @@ def assoc (x, alist) :
     if   not alist        : return []    # nil
     elif alist[0][0] == x : return alist[0][1]
     else                  : return assoc(x,alist[1:])
- 
-def apply (fn,args,alist) :
+
+def _diff(args):
+    if len(args) == 1:
+        return -args[0]
+    else:
+        return args[0]-sum(a[1:])
+
+def _prod(args):
+    tmp=1.0
+    for n in args:
+        tmp = tmp * n
+    return tmp
+
+def _div(args):
+    if len(args) == 1:
+        return 1.0/args[0]
+    else:
+        tmp=args[0]
+        for n in args[1:]:
+            tmp = tmp / n
+        return tmp
+
+# @debug
+def apply(fn,args,alist) :
     "apply a function fn to its arguments in args"
     if debug_flag :
         print("--Apply-- %s  Args=%s" % (putSexp(fn),putSexp(args)))
@@ -148,21 +170,25 @@ def apply (fn,args,alist) :
         if   fn == 'atom' : return [[],'t'][type(args[0]) != type([])]
         elif fn == 'car'  : return args[0][0]   # first element of 1st arg
         elif fn == 'cdr'  : return args[0][1:]  # tail of 1st arg
-        elif fn == '+'    : return args[0]+args[1]
-        elif fn == '-'    : return args[0]-args[1]
-        elif fn == '*'    : return args[0]*args[1]
-        elif fn == '/'    : return args[0]/args[1]
+        elif fn == '+'    : return  sum(args)
+        elif fn == '-'    : return _diff(args)
+        elif fn == '*'    : return _prod(args)
+        elif fn == '/'    : return _div(args)
         elif fn == 'eq'   : return [[],'t'][args[0] == args[1]]
         elif fn == 'not'  : return [[],'t'][args[0] == []]
         elif fn == 'cons' :
-            if type(args[1]) != type([]) : args[1] = [args[1]]
+            if type(args[1]) != type([]):
+                args[1] = [args[1]]
             return [args[0]] + args[1]
         elif fn == 'cos'  : return math.cos(args[0])
         elif fn == 'sin'  : return math.sin(args[0])
         elif fn == 'tan'  : return math.tan(args[0])
+        else:
+            return (apply(eval(fn,alist),args,alist))
     elif fn[0] == 'lambda' : # a function definition
         return eval (fn[2], pairlis(fn[1],args,alist))
-    else                   : scream("Can't apply %s" % fn)
+    else:
+        scream("Can't apply %s" % fn)
 
 # @debug
 def eval(exp, alist) :
