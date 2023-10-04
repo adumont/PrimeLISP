@@ -8,6 +8,8 @@
 #   Ported to HP Prime & More modifications
 
 import sys
+import math
+
 if sys.platform == 'HP Prime':
     is_prime = True
     import hpprime
@@ -155,7 +157,9 @@ def apply (fn,args,alist) :
         elif fn == 'cons' :
             if type(args[1]) != type([]) : args[1] = [args[1]]
             return [args[0]] + args[1]
-        else : return (apply(eval(fn,alist),args,alist))
+        elif fn == 'cos'  : return math.cos(args[0])
+        elif fn == 'sin'  : return math.sin(args[0])
+        elif fn == 'tan'  : return math.tan(args[0])
     elif fn[0] == 'lambda' : # a function definition
         return eval (fn[2], pairlis(fn[1],args,alist))
     else                   : scream("Can't apply %s" % fn)
