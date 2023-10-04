@@ -88,7 +88,7 @@ def assoc (x, alist) :
 def apply (fn,args,alist) :
     "apply a function fn to its arguments in args"
     if debug_flag :
-        print("--Apply-- %s  Args=%s" % (sxp(fn),sxp(args)))
+        print("--Apply-- %s  Args=%s" % (putSexp(fn),putSexp(args)))
         printAlist(alist)
 
     if isSymbol(fn) :   # name of a function
@@ -141,9 +141,8 @@ def evlis (l, alist) :
 
 def printAlist(alist) :
     print ("Alist")
-    for pair in alist :
-        name,sexp = pair
-        sexp = sxp(sexp)
+    for name,sexp in alist :
+        sexp = putSexp(sexp)
         output = "(%s %s)" % (name,sexp)
         if len(output) > 50 : output = output[:50]+"..."
         print(output)
