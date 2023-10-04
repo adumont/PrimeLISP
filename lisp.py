@@ -94,11 +94,13 @@ def getChar() :
 def isSymbol(x) : return type(x) == type('')
 def isNumber(x) : return type(x) == type(0.0)
 
-def pairlis (x,y,alist) :
+def pairlis(x,y,alist) :
     """push symbols in x with respective values in y onto the alist"""
-    if not x : return alist
-    else : return [[x[0],y[0]]] + pairlis(x[1:],y[1:],alist)
- 
+    if not x:
+        return alist
+    else:
+        return [[x[0],y[0]]] + pairlis(x[1:],y[1:],alist)
+
 def assoc (x, alist) :
     "look up x on the alist and return its value"
     if   not alist        : return []    # nil
