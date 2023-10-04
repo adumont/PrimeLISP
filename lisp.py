@@ -175,6 +175,10 @@ def apply(fn,args,alist) :
         elif fn == '*'    : return _prod(args)
         elif fn == '/'    : return _div(args)
         elif fn == 'eq'   : return [[],'t'][args[0] == args[1]]
+        elif fn == '<'    : return [[],'t'][args[0] <  args[1]]
+        elif fn == '<='   : return [[],'t'][args[0] <= args[1]]
+        elif fn == '>'    : return [[],'t'][args[0] >  args[1]]
+        elif fn == '>='   : return [[],'t'][args[0] >= args[1]]
         elif fn == 'not'  : return [[],'t'][args[0] == []]
         elif fn == 'cons' :
             if type(args[1]) != type([]):
