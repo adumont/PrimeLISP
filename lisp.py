@@ -160,6 +160,17 @@ def _div(args):
         return tmp
 
 # @debug
+def _setq(exp, alist, ret):
+    "Processes the list two by two, returns the last"
+    global Alist
+
+    if len(exp)<2: return ret
+    else:
+        tmp=eval(exp[1], alist)
+        alist = Alist = pairlis( [exp[0]], [tmp], alist )
+        return _setq(exp[2:], alist, tmp)
+
+# @debug
 def apply(fn,args,alist) :
     "apply a function fn to its arguments in args"
     if debug_flag :
@@ -208,6 +219,8 @@ def eval(exp, alist) :
     else :               # check for special forms
         if exp[0] == 'quote':
             return exp[1]
+        elif exp[0] == 'setq':
+            return _setq(exp[1:], alist, [])
         elif exp[0] == 'def' :
             # user define functions
             alist = Alist = pairlis( [exp[1]] , [exp[2]] , alist)
