@@ -205,14 +205,17 @@ def eval(exp, alist) :
     elif isNumber(exp)  : return exp      # numbers eval to themselves
     elif isSymbol(exp)  : return assoc(exp,alist)  # look up variables
     else :               # check for special forms
-        if   exp[0] == 'quote' : return exp[1]
-        elif exp[0] == 'def' :            # user define functions
-            alist = Alist = pairlis([exp[1]],[exp[2]],alist)
-            return exp[1]                 # return function name
-        elif exp[0] == 'cond'  : return evcon(exp[1:], alist)
-        else :
+        if exp[0] == 'quote':
+            return exp[1]
+        elif exp[0] == 'def' :
+            # user define functions
+            alist = Alist = pairlis( [exp[1]] , [exp[2]] , alist)
+            return exp[1] # return function name
+        elif exp[0] == 'cond':
+            return evcon(exp[1:], alist)
+        else:
             x = evlis(exp[1:], alist)
-            return apply (exp[0],x , alist)
+            return apply( exp[0], x , alist )
 
 # @debug
 def evcon (c, alist) :
