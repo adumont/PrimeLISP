@@ -8,6 +8,16 @@
 #   Ported to HP Prime & More modifications
 
 import sys
+if sys.platform == 'HP Prime':
+    import hpprime
+    import graphic
+    import urandom
+
+    graphic.clear_screen(0xffffff)
+    hpprime.eval("print")
+
+print("LISP for HP Prime v0.0 - @adumont")
+
 debug_flag = False          # show trace of evaluations if true
 
 inlin = ""
