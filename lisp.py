@@ -22,27 +22,37 @@ debug_flag = False          # show trace of evaluations if true
 
 inlin = ""
 
-def putSexp (s):
+def putSexp(s):
     # return string form of an S expression
     if type(s) == type([]) :
-        if True and len(s) and s[0] == 'quote' : return "'" + putSexp(s[1:])
-        else : return '(' + ' '.join(map(putSexp,s)) + ')'
-    else : return str(s)
+        if len(s) and s[0] == 'quote':
+            return "'" + putSexp(s[1])
+        else:
+            return '(' + ' '.join(map(putSexp,s)) + ')'
+    else:
+        return str(s)
 
-def getSexp () :       # get an S expression from the user
-    # return and discard the next S expression, 
+def getSexp():
+    # get an S expression from the user
+    # return and discard the next S expression,
     #   along with any nested ones in input
     a = getToken()
-    if   a == "'" : return ['quote', getSexp()]
-    elif a != '(' : return a
+
+    if   a == "'":
+        return ['quote', getSexp()]
+    elif a != '(':
+        return a
+
     a = []
-    while 1 :
+
+    while 1:
         b = getSexp()
-        if b == ')' : return a
+        if b == ')':
+            return a
         a.append(b)
 
-def getToken () :
-    # return and discard the next symbol, 
+def getToken() :
+    # return and discard the next symbol,
     #   number or special character in input
     while nextChar() <= ' ': getChar()  # skip whitespace
     a = getChar()
@@ -51,7 +61,7 @@ def getToken () :
         a = a + getChar()
     try    : return float(a)   # if a number, make it a float
     except : return a          # otherwise a string with the symbol name
- 
+
 def getFile(fname) :
     output = []
     lines = open(fname).readlines()
