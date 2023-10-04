@@ -17,15 +17,36 @@ if sys.platform == 'HP Prime':
     graphic.clear_screen(0xffffff)
     hpprime.eval("print")
 
+    def debug(func): # fake decorator for the Prime
+        return func
+
 else:
     is_prime = False
+
+    import functools
+
+    def debug(func):
+        """Print the function signature and return value"""
+        @functools.wraps(func)
+        def wrapper_debug(*args, **kwargs):
+            args_repr = [repr(a) for a in args]                      # 1
+            kwargs_repr = [f"{k}={v!r}" for k, v in kwargs.items()]  # 2
+            signature = ", ".join(args_repr + kwargs_repr)           # 3
+            print(f"Calling {func.__name__}({signature})")
+            value = func(*args, **kwargs)
+            print(f"{func.__name__}({signature}) returned {value!r}")           # 4
+            return value
+        return wrapper_debug
+
 
 print("LISP for HP Prime v0.0 - @adumont")
 
 debug_flag = False          # show trace of evaluations if true
+Alist = []             # Hold the global defs
 
 inlin = ""
 
+# @debug
 def putSexp(s):
     # return string form of an S expression
     if type(s) == type([]) :
@@ -36,6 +57,7 @@ def putSexp(s):
     else:
         return str(s)
 
+# @debug
 def getSexp():
     # get an S expression from the user
     # return and discard the next S expression,
@@ -81,13 +103,15 @@ def nextChar() :
     # return (but don't discard) the next character in the input stream
     #   get more from the user if needed
     global inlin, inputter
-    if inlin == "" : 
-        inlin = raw_input("Lisp>")
-        if inlin == "" : sys.exit()
+    if inlin == "" :
+        inlin = input("LISP>")
+        # if inlin == "" : sys.exit()
+        inlin=inlin + " "
         if inlin[0] == '@' :
             inlin = getFile(inlin[1:])
+
     return inlin[0:1]
-    
+
 def getChar() :
     # return and discard the next character in the input stream
     global inlin
@@ -98,6 +122,7 @@ def getChar() :
 def isSymbol(x) : return type(x) == type('')
 def isNumber(x) : return type(x) == type(0.0)
 
+# @debug
 def pairlis(x,y,alist) :
     """push symbols in x with respective values in y onto the alist"""
     if not x:
@@ -135,7 +160,8 @@ def apply (fn,args,alist) :
         return eval (fn[2], pairlis(fn[1],args,alist))
     else                   : scream("Can't apply %s" % fn)
 
-def eval (exp, alist) :
+# @debug
+def eval(exp, alist) :
     "evaluate an S expression using the alist"
     global Alist
     if debug_flag : print("--Eval--- %s" %  putSexp(exp)); printAlist(alist)
@@ -154,12 +180,14 @@ def eval (exp, alist) :
             x = evlis(exp[1:], alist)
             return apply (exp[0],x , alist)
 
+# @debug
 def evcon (c, alist) :
     "evaluate cond. Note just the pairs passed in c"
     if   len(c) == 0           : return []
     elif eval (c[0][0], alist) : return eval (c[0][1],alist)
     else                       : return evcon(c[1:],  alist)
 
+# @debug
 def evlis(list, alist) :
     "evaluate all elements in a list, returning list of the values"
     if not list:
