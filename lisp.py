@@ -8,7 +8,7 @@
 #   Ported to HP Prime & More modifications
 
 import sys
-if sys.version > '3' : raw_input = input
+debug_flag = False          # show trace of evaluations if true
 
 inlin = ""
 
@@ -71,12 +71,8 @@ def getChar() :
     inlin = inlin[1:]
     return c
 
-sxp   = putSexp # function to convert python list to Sexp
-debug = False          # show trace of evaluations if true
-Alist = []             # Hold the global defs
-
-def isSymbol(x) : return type(x) == type('') 
-def isNumber(x) : return type(x) == type(0.0) 
+def isSymbol(x) : return type(x) == type('')
+def isNumber(x) : return type(x) == type(0.0)
 
 def pairlis (x,y,alist) :
     """push symbols in x with respective values in y onto the alist"""
@@ -91,7 +87,7 @@ def assoc (x, alist) :
  
 def apply (fn,args,alist) :
     "apply a function fn to its arguments in args"
-    if debug :
+    if debug_flag :
         print("--Apply-- %s  Args=%s" % (sxp(fn),sxp(args)))
         printAlist(alist)
 
@@ -116,7 +112,7 @@ def apply (fn,args,alist) :
 def eval (exp, alist) :
     "evaluate an S expression using the alist"
     global Alist
-    if debug : print("--Eval--- %s" %  sxp(exp)); printAlist(alist)
+    if debug_flag : print("--Eval--- %s" %  putSexp(exp)); printAlist(alist)
     if   exp == 't'     : return 't'      # true evaluates to itself
     elif exp == 'nil'   : return []       # symbol nil same as a null list
     elif exp == 'alist' : return Alist    # special command to examine alist
@@ -158,11 +154,11 @@ def scream(mesg) :
 
 def main () :   
     "get S expressions and evaluate them. Print the results"
-    global Alist, debug
+    global Alist, debug_flag
     while True :
         s = getSexp()
         if   s == 'alist' : printAlist(Alist)
-        elif s == 'debug' : debug = not debug
+        elif s == 'debug' : debug_flag = not debug_flag
         else :
             try    : print(putSexp(eval(s ,Alist)))
             except : scream("cant eval %s " % s)
