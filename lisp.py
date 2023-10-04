@@ -9,12 +9,16 @@
 
 import sys
 if sys.platform == 'HP Prime':
+    is_prime = True
     import hpprime
     import graphic
     import urandom
 
     graphic.clear_screen(0xffffff)
     hpprime.eval("print")
+
+else:
+    is_prime = False
 
 print("LISP for HP Prime v0.0 - @adumont")
 
@@ -175,7 +179,7 @@ def scream(mesg) :
     print("Exiting: %s" % mesg)
     sys.exit(1)
 
-def main () :   
+def main() :
     "get S expressions and evaluate them. Print the results"
     global Alist, debug_flag
     while True :
@@ -183,6 +187,8 @@ def main () :
         if   s == 'alist' : printAlist(Alist)
         elif s == 'debug' : debug_flag = not debug_flag
         else :
+            if is_prime:
+                print(putSexp(s))
             try    : print(putSexp(eval(s ,Alist)))
             except : scream("cant eval %s " % s)
 
