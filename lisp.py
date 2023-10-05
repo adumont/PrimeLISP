@@ -230,7 +230,13 @@ def eval(exp, alist) :
             return _setq(exp[1:], alist, [])
         elif exp[0] == 'def' :
             # user define functions
+            # LISP> (def test (lambda (a b) (+ a b 1 )))
             alist = Alist = pairlis( [exp[1]] , [exp[2]] , alist)
+            return exp[1] # return function name
+        elif exp[0] == 'defun' :
+            # user define functions
+            # LISP> (defun test (a b) (+ a b 1 ))
+            alist = Alist = pairlis( [exp[1]] , [ ['lambda'] + exp[2:]] , alist)
             return exp[1] # return function name
         elif exp[0] == 'cond':
             return evcon(exp[1:], alist)
