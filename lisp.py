@@ -27,16 +27,20 @@ else:
 
     import functools
 
+    debug_indent = 0
     def debug(func):
         """Print the function signature and return value"""
         @functools.wraps(func)
         def wrapper_debug(*args, **kwargs):
+            global debug_indent
             args_repr = [repr(a) for a in args]                      # 1
             kwargs_repr = [f"{k}={v!r}" for k, v in kwargs.items()]  # 2
             signature = ", ".join(args_repr + kwargs_repr)           # 3
-            print(f"Calling {func.__name__}({signature})")
+            print(f"{'  '*debug_indent}Calling {func.__name__}({signature})")
+            debug_indent += 1
             value = func(*args, **kwargs)
-            print(f"{func.__name__}({signature}) returned {value!r}")           # 4
+            debug_indent -= 1
+            print(f"{'  '*debug_indent}{func.__name__}({signature}) returned {value!r}")           # 4
             return value
         return wrapper_debug
 
