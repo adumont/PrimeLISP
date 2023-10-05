@@ -206,7 +206,10 @@ def apply(fn,args,alist) :
         else:
             return (apply(eval(fn,alist),args,alist))
     elif fn[0] == 'lambda' : # a function definition
-        return eval (fn[2], pairlis(fn[1],args,alist))
+        # EVAL ALL forms in the lambda definition
+        for i in range(2,len(fn)):  # this loop isn't Lispy... there must be a recursive way?
+            tmp = eval(fn[i], pairlis(fn[1],args,alist))
+        return tmp
     else:
         scream("Can't apply %s" % fn)
 
