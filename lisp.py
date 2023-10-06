@@ -182,8 +182,6 @@ def _setq(exp, alist, ret):
     "Processes the list two by two, returns the last"
     global Alist
 
-    "TODO Las variables de setq son globales! no se añaden a alist, hay que buscarla y cambiarla"
-
     if len(exp)<2: return ret
     else:
         tmp=eval(exp[1], alist)
