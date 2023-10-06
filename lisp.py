@@ -25,6 +25,8 @@ if sys.platform == 'HP Prime':
 else:
     is_prime = False
 
+    sys.setrecursionlimit(10**4)
+
     import functools
 
     debug_indent = 0
