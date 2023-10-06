@@ -249,6 +249,11 @@ def eval(exp, alist) :
             return exp[1]
         if exp[0] == 'list':               # (list 'A 'B '(C)') => (A B (C))
             return evlis(exp[1:], alist)
+        if exp[0] == 'append':             # (append '(a b c) '(d e f) '() '(g)) =>  (A B C D E F G)
+            tmp = []
+            for l in evlis(exp[1:], alist):
+                tmp += l
+            return tmp
         elif exp[0] == 'setq':
             return _setq(exp[1:], alist, [])
         elif exp[0] == 'def' :
@@ -275,7 +280,7 @@ def evcon (c, alist) :
     else                       : return evcon(c[1:],  alist)
 
 # @debug
-def evlis(list, alist) :
+def evlis(list, alist):
     "evaluate all elements in a list, returning list of the values"
     if not list:
         return []
