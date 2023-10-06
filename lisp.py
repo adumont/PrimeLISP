@@ -247,6 +247,8 @@ def eval(exp, alist) :
     else :               # check for special forms
         if exp[0] == 'quote':
             return exp[1]
+        if exp[0] == 'list':               # (list 'A 'B '(C)') => (A B (C))
+            return evlis(exp[1:], alist)
         elif exp[0] == 'setq':
             return _setq(exp[1:], alist, [])
         elif exp[0] == 'def' :
