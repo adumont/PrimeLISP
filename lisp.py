@@ -240,6 +240,7 @@ def eval(exp, alist) :
     if debug_flag : print("--Eval--- %s" %  putSexp(exp)); printAlist(alist)
     if   exp == 't'     : return 't'      # true evaluates to itself
     elif exp == 'nil'   : return []       # symbol nil same as a null list
+    elif exp == []      : return []
     elif exp == 'alist' : return Alist    # special command to examine alist
     elif isNumber(exp)  : return exp      # numbers eval to themselves
     elif isSymbol(exp)  : return assoc(exp,alist)  # look up variables
