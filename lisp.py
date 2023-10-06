@@ -164,14 +164,28 @@ def _div(args):
         return tmp
 
 # @debug
+def update_global(name, value, alist):
+    "Add/Update global variable to alist"
+
+    if len(alist) > 0:
+        for i in range(len(alist)-1, -1, -1):
+            if alist[i][0] == name:
+                alist[i][1] = value
+                return alist
+
+    return [[name,value]] + alist
+
+# @debug
 def _setq(exp, alist, ret):
     "Processes the list two by two, returns the last"
     global Alist
 
+    "TODO Las variables de setq son globales! no se añaden a alist, hay que buscarla y cambiarla"
+
     if len(exp)<2: return ret
     else:
         tmp=eval(exp[1], alist)
-        alist = Alist = pairlis( [exp[0]], [tmp], alist )
+        alist = Alist = update_global( exp[0], tmp, alist )
         return _setq(exp[2:], alist, tmp)
 
 # @debug
