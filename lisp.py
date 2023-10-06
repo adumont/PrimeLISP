@@ -207,9 +207,15 @@ def apply(fn,args,alist) :
             return (apply(eval(fn,alist),args,alist))
     elif fn[0] == 'lambda' : # a function definition
         # EVAL ALL forms in the lambda definition
+        tmp_alist = pairlis(fn[1],args,alist)
         for i in range(2,len(fn)):  # this loop isn't Lispy... there must be a recursive way?
-            tmp = eval(fn[i], pairlis(fn[1],args,alist))
+            tmp = eval(fn[i], tmp_alist)
         return tmp
+        # tmp_alist = alist
+        # for i in range(2,len(fn)):  # this loop isn't Lispy... there must be a recursive way?
+        #     tmp_alist = pairlis(fn[1],args,tmp_alist)
+        #     tmp = eval(fn[i], pairlis(fn[1],args,tmp_alist))
+        # return tmp
     else:
         scream("Can't apply %s" % fn)
 
