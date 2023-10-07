@@ -274,6 +274,8 @@ def eval(exp, alist) :
             return tmp
         elif exp[0] == 'setq':
             return _setq(exp[1:], alist, [])
+        elif exp[0] == 'set':
+            return _setq( evlis(exp[1:], alist) , alist, [])
         elif exp[0] == 'def' :
             # user define functions
             # LISP> (def test (lambda (a b) (+ a b 1 )))
