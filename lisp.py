@@ -308,7 +308,6 @@ def printAlist(alist) :
     for name,sexp in alist :
         sexp = putSexp(sexp)
         output = "(%s %s)" % (name,sexp)
-        if len(output) > 50 : output = output[:50]+"..."
         print(output)
 
 def scream(mesg) :
