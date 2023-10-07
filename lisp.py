@@ -206,6 +206,11 @@ def _setq(exp, alist, ret):
         alist = Alist = update_global( exp[0], tmp, alist )
         return _setq(exp[2:], alist, tmp)
 
+def _print(args):
+    for a in args:
+        print(a, end=" ")
+    return a
+
 # @debug
 def apply(fn,args,alist) :
     "apply a function fn to its arguments in args"
@@ -228,6 +233,7 @@ def apply(fn,args,alist) :
         elif fn == '>='   : return [[],'t'][args[0] >= args[1]]
         elif fn == 'not'  : return [[],'t'][args[0] == []]
         elif fn == 'eval' : return eval(args[0], alist)
+        elif fn == 'print': return _print(args)
         elif fn == 'cons' :
             if type(args[1]) != type([]):
                 args[1] = [args[1]]
