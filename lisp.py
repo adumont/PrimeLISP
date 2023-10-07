@@ -52,7 +52,23 @@ print("LISP for HP Prime v0.0 - @adumont")
 debug_flag = False          # show trace of evaluations if true
 Alist = []             # Hold the global defs
 
-inlin = ""
+# Bootstrap LISP Code
+inlin = """
+(defun fact (x)
+  (cond
+    ( (eq x 0) 1 )
+    ( t        (* x (fact (+ x -1))))
+  )
+)
+
+(defun member ( X L )
+  (cond
+    ( (eq L () )      () )
+    ( (eq X (car L )) L  )
+    ( t               (member X (cdr L) ) )
+  )
+)
+"""
 
 # @debug
 def putSexp(s):
