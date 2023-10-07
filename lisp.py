@@ -53,21 +53,23 @@ debug_flag = False          # show trace of evaluations if true
 Alist = []             # Hold the global defs
 
 # Bootstrap LISP Code
+# https://shaunlebron.github.io/parinfer/ --> Parinfer's "Indent Mode" rearranges parens when you change indentation
 inlin = """
 (defun fact (x)
   (cond
-    ( (eq x 0) 1 )
-    ( t        (* x (fact (+ x -1))))
-  )
-)
+    ( (eq x 0) 1)
+    ( t        (* x (fact (+ x -1))))))
 
-(defun member ( X L )
+(defun member ( X L)
   (cond
-    ( (eq L () )      () )
-    ( (eq X (car L )) L  )
-    ( t               (member X (cdr L) ) )
-  )
-)
+    ( (eq L () )      ())
+    ( (eq X (car L )) L)
+    ( t               (member X (cdr L)))))
+
+(defun reverse (L)
+  (cond
+    ( (not L) ())
+    ( t (append (reverse (cdr L)) (car L)))))
 """
 
 # @debug
