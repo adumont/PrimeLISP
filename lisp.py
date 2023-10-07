@@ -312,7 +312,7 @@ def printAlist(alist) :
 
 def scream(mesg) :
     print("Exiting: %s" % mesg)
-    sys.exit(1)
+    # sys.exit(1)
 
 def main() :
     "get S expressions and evaluate them. Print the results"
@@ -326,6 +326,8 @@ def main() :
             if is_prime:
                 print(putSexp(s))
             try    : print(putSexp(eval(s ,Alist)))
-            except : scream("cant eval %s " % s)
+            except :
+                scream("cant eval %s " % s)
+                raise
 
 if __name__ == "__main__" : main()
