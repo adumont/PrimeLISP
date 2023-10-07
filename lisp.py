@@ -147,12 +147,12 @@ def isSymbol(x) : return type(x) == type('')
 def isNumber(x) : return type(x) == type(0.0)
 
 # @debug
-def pairlis(x,y,alist) :
+def bind(names,values,alist) :
     """push symbols in x with respective values in y onto the alist"""
-    if not x:
+    if not names:
         return alist
     else:
-        return [[x[0],y[0]]] + pairlis(x[1:],y[1:],alist)
+        return [[names[0],values[0]]] + bind(names[1:],values[1:],alist)
 
 def assoc (x, alist) :
     "look up x on the alist and return its value"
@@ -237,7 +237,7 @@ def apply(fn,args,alist) :
             return (apply(eval(fn,alist),args,alist))
     elif fn[0] == 'lambda' : # a function definition
         # EVAL ALL forms in the lambda definition
-        tmp_alist = pairlis(fn[1],args,alist)
+        tmp_alist = bind( names=fn[1], values=args, alist=alist )
         for i in range(2,len(fn)):  # this loop isn't Lispy... there must be a recursive way?
             tmp = eval(fn[i], tmp_alist)
         return tmp
@@ -275,12 +275,12 @@ def eval(exp, alist) :
         elif exp[0] == 'def' :
             # user define functions
             # LISP> (def test (lambda (a b) (+ a b 1 )))
-            alist = Alist = pairlis( [exp[1]] , [exp[2]] , alist)
+            alist = Alist = bind( names=[exp[1]] , values=[exp[2]] , alist=alist)
             return exp[1] # return function name
         elif exp[0] == 'defun' :
             # user define functions
             # LISP> (defun test (a b) (+ a b 1 ))
-            alist = Alist = pairlis( [exp[1]] , [ ['lambda'] + exp[2:]] , alist)
+            alist = Alist = bind( names=[exp[1]] , values=[ ['lambda'] + exp[2:]] , alist=alist)
             return exp[1] # return function name
         elif exp[0] == 'cond':
             return evcon(exp[1:], alist)
