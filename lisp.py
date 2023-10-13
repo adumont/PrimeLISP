@@ -156,11 +156,15 @@ def bind(names,values,alist) :
     else:
         return [[names[0],values[0]]] + bind(names[1:],values[1:],alist)
 
-def assoc (x, alist) :
+#@debug
+def resolve(symbol, env):
     "look up x on the alist and return its value"
-    if   not alist        : return []    # nil
-    elif alist[0][0] == x : return alist[0][1]
-    else                  : return assoc(x,alist[1:])
+
+    for name,value in env:
+        if name == symbol:
+            return value
+
+    return []    # nil
 
 def _diff(args):
     if len(args) == 1:
@@ -267,7 +271,7 @@ def eval(exp, alist) :
     elif exp == []      : return []
     elif exp == 'alist' : return Alist    # special command to examine alist
     elif isNumber(exp)  : return exp      # numbers eval to themselves
-    elif isSymbol(exp)  : return assoc(exp,alist)  # look up variables
+    elif isSymbol(exp)  : return resolve(symbol=exp,env=alist)  # look up variables
     else :               # check for special forms
         if exp[0] == 'quote':
             return exp[1]
