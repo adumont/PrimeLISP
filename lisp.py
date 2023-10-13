@@ -304,9 +304,17 @@ def eval(exp, alist):
 # @debug
 def evcon(c, alist):
     "evaluate cond. Note just the pairs passed in c"
-    if   len(c) == 0           : return []
-    elif eval (c[0][0], alist) : return eval (c[0][1],alist)
-    else                       : return evcon(c[1:],  alist)
+
+    for clause in c:
+        test = clause[0]
+        consequents = clause[1:] # one or more forms
+
+        if eval(test, alist):
+            for c in consequents:
+                res = eval(c, alist)
+            return res # result of the last evaluated form
+
+    return []
 
 # @debug
 def evlis(list, alist):
