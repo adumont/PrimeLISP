@@ -166,7 +166,7 @@ def _diff(args):
     if len(args) == 1:
         return -args[0]
     else:
-        return args[0]-sum(a[1:])
+        return args[0]-sum(args[1:])
 
 def _prod(args):
     tmp=1.0
