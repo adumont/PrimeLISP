@@ -50,7 +50,7 @@ else:
 print("LISP for HP Prime v0.0 - @adumont")
 
 debug_flag = False          # show trace of evaluations if true
-Alist = []             # Hold the global defs
+gEnv = []             # Hold the global defs
 
 # Bootstrap LISP Code
 # https://shaunlebron.github.io/parinfer/ --> Parinfer's "Indent Mode" rearranges parens when you change indentation
@@ -202,12 +202,12 @@ def update_global(name, value, alist):
 # @debug
 def _setq(exp, alist, ret):
     "Processes the list two by two, returns the last"
-    global Alist
+    global gEnv
 
     if len(exp)<2: return ret
     else:
         tmp=eval(exp[1], alist)
-        alist = Alist = update_global( exp[0], tmp, alist )
+        alist = gEnv = update_global( exp[0], tmp, alist )
         return _setq(exp[2:], alist, tmp)
 
 def _print(args):
@@ -264,12 +264,11 @@ def apply(fn,args,alist):
 # @debug
 def eval(exp, alist):
     "evaluate an S expression using the alist"
-    global Alist
+    global gEnv
     if debug_flag : print("--Eval--- %s" %  putSexp(exp)); printAlist(alist)
     if   exp == 't'     : return 't'      # true evaluates to itself
     elif exp == 'nil'   : return []       # symbol nil same as a null list
     elif exp == []      : return []
-    elif exp == 'alist' : return Alist    # special command to examine alist
     elif isNumber(exp)  : return exp      # numbers eval to themselves
     elif isSymbol(exp)  : return resolve(symbol=exp,env=alist)  # look up variables
     else :               # check for special forms
@@ -289,12 +288,12 @@ def eval(exp, alist):
         elif exp[0] == 'def' :
             # user define functions
             # LISP> (def test (lambda (a b) (+ a b 1 )))
-            alist = Alist = bind( names=[exp[1]] , values=[exp[2]] , alist=alist)
+            alist = gEnv = bind( names=[exp[1]] , values=[exp[2]] , alist=alist)
             return exp[1] # return function name
         elif exp[0] == 'defun' :
             # user define functions
             # LISP> (defun test (a b) (+ a b 1 ))
-            alist = Alist = bind( names=[exp[1]] , values=[ ['lambda'] + exp[2:]] , alist=alist)
+            alist = gEnv = bind( names=[exp[1]] , values=[ ['lambda'] + exp[2:]] , alist=alist)
             return exp[1] # return function name
         elif exp[0] == 'cond':
             return evcon(exp[1:], alist)
@@ -330,16 +329,16 @@ def scream(mesg):
 
 def main():
     "get S expressions and evaluate them. Print the results"
-    global Alist, debug_flag
+    global gEnv, debug_flag
     while True :
         s = getSexp()
-        if   s == 'alist' : printAlist(Alist)
+        if   s == 'alist' : printAlist(gEnv)
         elif s == 'exit' or s == 'quit'  : quit()
         elif s == 'debug' : debug_flag = not debug_flag
         else :
             if is_prime:
                 print(putSexp(s))
-            try    : print(putSexp(eval(s ,Alist)))
+            try    : print(putSexp(eval(s ,gEnv)))
             except :
                 scream("cant eval %s " % s)
                 raise
