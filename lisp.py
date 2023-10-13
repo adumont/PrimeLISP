@@ -311,10 +311,7 @@ def evcon(c, alist):
 # @debug
 def evlis(list, alist):
     "evaluate all elements in a list, returning list of the values"
-    if not list:
-        return []
-    else:
-        return [ eval(list[0], alist) ] + evlis( list[1:], alist )
+    return [ eval(e, alist) for e in list ]
 
 def printAlist(alist):
     print("Alist")
