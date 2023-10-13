@@ -75,7 +75,7 @@ inlin = """
 # @debug
 def putSexp(s):
     # return string form of an S expression
-    if type(s) == type([]) :
+    if type(s) == type([]):
         if len(s) and s[0] == 'quote':
             return "'" + putSexp(s[1])
         else:
@@ -103,7 +103,7 @@ def getSexp():
             return a
         a.append(b)
 
-def getToken() :
+def getToken():
     # return and discard the next symbol,
     #   number or special character in input
     while nextChar() <= ' ': getChar()  # skip whitespace
@@ -114,7 +114,7 @@ def getToken() :
     try    : return float(a)   # if a number, make it a float
     except : return a          # otherwise a string with the symbol name
 
-def getFile(fname) :
+def getFile(fname):
     output = []
     lines = open(fname).readlines()
     for line in lines :
@@ -125,7 +125,7 @@ def getFile(fname) :
             output.append(line)
     return '\n'.join(output)
 
-def nextChar() :
+def nextChar():
     # return (but don't discard) the next character in the input stream
     #   get more from the user if needed
     global inlin, inputter
@@ -138,18 +138,18 @@ def nextChar() :
 
     return inlin[0:1]
 
-def getChar() :
+def getChar():
     # return and discard the next character in the input stream
     global inlin
     c = nextChar()
     inlin = inlin[1:]
     return c
 
-def isSymbol(x) : return type(x) == type('')
-def isNumber(x) : return type(x) == type(0.0)
+def isSymbol(x): return type(x) == type('')
+def isNumber(x): return type(x) == type(0.0)
 
 # @debug
-def bind(names,values,alist) :
+def bind(names,values,alist):
     """push symbols in x with respective values in y onto the alist"""
     if not names:
         return alist
@@ -216,13 +216,13 @@ def _print(args):
     return a
 
 # @debug
-def apply(fn,args,alist) :
+def apply(fn,args,alist):
     "apply a function fn to its arguments in args"
     if debug_flag :
         print("--Apply-- %s  Args=%s" % (putSexp(fn),putSexp(args)))
         printAlist(alist)
 
-    if isSymbol(fn) :   # name of a function
+    if isSymbol(fn):   # name of a function
         if   fn == 'atom' : return [[],'t'][type(args[0]) != type([])]
         elif fn == 'car'  : return args[0][0]   # first element of 1st arg
         elif fn == 'cdr'  : return args[0][1:]  # tail of 1st arg
@@ -262,7 +262,7 @@ def apply(fn,args,alist) :
         scream("Can't apply %s" % fn)
 
 # @debug
-def eval(exp, alist) :
+def eval(exp, alist):
     "evaluate an S expression using the alist"
     global Alist
     if debug_flag : print("--Eval--- %s" %  putSexp(exp)); printAlist(alist)
@@ -303,7 +303,7 @@ def eval(exp, alist) :
             return apply( exp[0], x , alist )
 
 # @debug
-def evcon (c, alist) :
+def evcon(c, alist):
     "evaluate cond. Note just the pairs passed in c"
     if   len(c) == 0           : return []
     elif eval (c[0][0], alist) : return eval (c[0][1],alist)
@@ -317,18 +317,18 @@ def evlis(list, alist):
     else:
         return [ eval(list[0], alist) ] + evlis( list[1:], alist )
 
-def printAlist(alist) :
-    print ("Alist")
+def printAlist(alist):
+    print("Alist")
     for name,sexp in alist :
         sexp = putSexp(sexp)
         output = "(%s %s)" % (name,sexp)
         print(output)
 
-def scream(mesg) :
+def scream(mesg):
     print("Exiting: %s" % mesg)
     # sys.exit(1)
 
-def main() :
+def main():
     "get S expressions and evaluate them. Print the results"
     global Alist, debug_flag
     while True :
