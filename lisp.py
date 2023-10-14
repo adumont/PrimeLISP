@@ -151,10 +151,13 @@ def isNumber(x): return type(x) == type(0.0)
 # @debug
 def bind(names,values,alist):
     """push symbols in x with respective values in y onto the alist"""
-    if not names:
-        return alist
-    else:
-        return [[names[0],values[0]]] + bind(names[1:],values[1:],alist)
+
+    tmp = [ pair for pair in alist ]    # we copy the alist
+
+    for name, value in zip(names,values):
+        tmp.insert( 0, [ name, value ] )
+
+    return tmp
 
 #@debug
 def resolve(symbol, env):
